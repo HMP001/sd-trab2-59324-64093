@@ -1,0 +1,33 @@
+1 - Criacao Users server Keystores
+
+keytool -ext SAN=dns:Users -genkey -alias Users -keyalg RSA -validity 365 -keystore users-1-server.ks -storetype pkcs12
+
+2 - Criacao Image server Keystores
+
+keytool -ext SAN=dns:Image -genkey -alias Image -keyalg RSA -validity 365 -keystore image-1-server.ks -storetype pkcs12
+
+keytool -ext SAN=dns:Image -genkey -alias Image -keyalg RSA -validity 365 -keystore image-2-server.ks -storetype pkcs12
+
+3 - Criacao Content server Keystores
+
+keytool -ext SAN=dns:Content -genkey -alias Content -keyalg RSA -validity 365 -keystore content-1-server.ks -storetype pkcs12
+
+keytool -ext SAN=dns:Content -genkey -alias Content -keyalg RSA -validity 365 -keystore content-2-server.ks -storetype pkcs12
+
+keytool -ext SAN=dns:Content -genkey -alias Content -keyalg RSA -validity 365 -keystore content-3-server.ks -storetype pkcs12
+
+4 - Client Truststore
+
+cp /usr/lib/jvm/java-19-openjdk-amd64/lib/security/cacerts truststore.ks
+
+keytool -exportcert -alias Users -keystore users-1-server.ks -file users.cert
+
+keytool -exportcert -alias Image -keystore image-1-server.ks -file image.cert
+
+keytool -exportcert -alias Image -keystore image-2-server.ks -file image.cert
+
+keytool -exportcert -alias Content -keystore content-1-server.ks -file content.cert
+
+keytool -exportcert -alias Content -keystore content-2-server.ks -file content.cert
+
+keytool -exportcert -alias Content -keystore content-3-server.ks -file content.cert
