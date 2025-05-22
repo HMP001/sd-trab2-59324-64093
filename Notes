@@ -20,14 +20,26 @@ keytool -ext SAN=dns:Content -genkey -alias Content -keyalg RSA -validity 365 -k
 
 cp /usr/lib/jvm/java-19-openjdk-amd64/lib/security/cacerts truststore.ks
 
-keytool -exportcert -alias Users -keystore users-1-server.ks -file users.cert
+keytool -exportcert -alias Users -keystore users-1-server.ks -file users-1.cert
 
-keytool -exportcert -alias Image -keystore image-1-server.ks -file image.cert
+keytool -importcert -file users-1.cert -alias Users -keystore truststore.ks
 
-keytool -exportcert -alias Image -keystore image-2-server.ks -file image.cert
+keytool -exportcert -alias Image -keystore image-1-server.ks -file image-1.cert
 
-keytool -exportcert -alias Content -keystore content-1-server.ks -file content.cert
+keytool -importcert -file image-1.cert -alias Image -keystore truststore.ks
 
-keytool -exportcert -alias Content -keystore content-2-server.ks -file content.cert
+keytool -exportcert -alias Image -keystore image-2-server.ks -file image-2.cert
 
-keytool -exportcert -alias Content -keystore content-3-server.ks -file content.cert
+keytool -importcert -file image-2.cert -alias Image2 -keystore truststore.ks
+
+keytool -exportcert -alias Content -keystore content-1-server.ks -file content-1.cert
+
+keytool -importcert -file content-1.cert -alias Content -keystore truststore.ks
+
+keytool -exportcert -alias Content -keystore content-2-server.ks -file content-2.cert
+
+keytool -importcert -file content-2.cert -alias Content2 -keystore truststore.ks
+
+keytool -exportcert -alias Content -keystore content-3-server.ks -file content-3.cert
+
+keytool -importcert -file content-3.cert -alias Content3 -keystore truststore.ks
