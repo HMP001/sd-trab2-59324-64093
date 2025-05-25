@@ -23,8 +23,8 @@ public class ServerUtils {
     }
 
     public static String computeServerUri(String protocol, int port, CommInterface comm) throws UnknownHostException {
-        String ip = InetAddress.getLocalHost().getHostAddress();
-        return SERVER_URI_FMT.formatted(protocol, ip, port, comm.getType());
+        String hostname = InetAddress.getLocalHost().getHostName();
+        return SERVER_URI_FMT.formatted(protocol, hostname, port, comm.getType());
     }
 
 }

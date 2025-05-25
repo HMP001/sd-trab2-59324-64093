@@ -13,6 +13,7 @@ public class UsersRestServer {
 
     static {
         System.setProperty("java.net.preferIPv4Stack", "true");
+        System.setProperty("java.util.logging.SimpleFormatter.format", "%4$s: %5$s%n");
     }
 
     public static final int PORT = 8080;
