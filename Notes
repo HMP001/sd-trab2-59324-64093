@@ -43,3 +43,6 @@ keytool -importcert -file content-2.cert -alias Content2 -keystore truststore.ks
 keytool -exportcert -alias Content -keystore content-3-server.ks -file content-3.cert
 
 keytool -importcert -file content-3.cert -alias Content3 -keystore truststore.ks
+
+
+How to run
