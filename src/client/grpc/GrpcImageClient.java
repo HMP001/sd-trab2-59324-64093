@@ -4,10 +4,10 @@ import api.java.Image;
 import api.java.Result;
 import com.google.protobuf.ByteString;
 import io.grpc.LoadBalancerRegistry;
-import io.grpc.ManagedChannelBuilder;
 import io.grpc.internal.PickFirstLoadBalancerProvider;
 import network.grpc.ImageGrpc;
 import network.grpc.ImageProtoBuf;
+import io.grpc.netty.NettyChannelBuilder;
 
 import java.net.URI;
 
@@ -17,6 +17,7 @@ import static api.java.Result.error;
 import static api.java.Result.ok;
 import static client.grpc.GrpcClientUtils.wrapRequest;
 
+
 public class GrpcImageClient implements Image {
 
     static {
@@ -25,8 +26,9 @@ public class GrpcImageClient implements Image {
 
     private final ImageGrpc.ImageBlockingStub stub;
 
-    public GrpcImageClient(URI serverURI) {
-        var channel = ManagedChannelBuilder.forAddress(serverURI.getHost(), serverURI.getPort()).enableRetry().usePlaintext().build();
+    public GrpcImageClient(URI serverURI) throws Exception {
+        var context = GrpcClientUtils.addSslContext();
+        var channel = NettyChannelBuilder.forAddress(serverURI.getHost(), serverURI.getPort()).sslContext(context).enableRetry().build();
         this.stub = ImageGrpc.newBlockingStub(channel);
     }
 

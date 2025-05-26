@@ -6,6 +6,7 @@ import api.java.Result;
 import io.grpc.LoadBalancerRegistry;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.internal.PickFirstLoadBalancerProvider;
+import io.grpc.netty.NettyChannelBuilder;
 import network.DataModelAdaptor;
 import network.grpc.ContentGrpc;
 import network.grpc.ContentProtoBuf.*;
@@ -26,8 +27,9 @@ public class GrpcContentClient implements Content {
 
     private final ContentGrpc.ContentBlockingStub stub;
 
-    public GrpcContentClient(URI serverUri) {
-        var channel = ManagedChannelBuilder.forAddress(serverUri.getHost(), serverUri.getPort()).enableRetry().usePlaintext().build();
+    public GrpcContentClient(URI serverUri) throws Exception {
+        var context = GrpcClientUtils.addSslContext();
+        var channel = NettyChannelBuilder.forAddress(serverUri.getHost(), serverUri.getPort()).sslContext(context).enableRetry().build();		
         this.stub = ContentGrpc.newBlockingStub(channel);
     }
 

@@ -124,8 +124,19 @@ public class ContentClient implements Content {
     private void materializeChannel() {
         synchronized (this) {
             if (inner == null)
-                inner = launcher.launch(SERVICE, RestContentClient::new, GrpcContentClient::new);
+                inner = computeInnerChannel();
         }
     }
+
+    private Content computeInnerChannel() {
+        return launcher.launch(SERVICE, RestContentClient::new, uri -> {
+                try {
+                    return new GrpcContentClient(uri);
+                } catch (Exception e) {
+                    throw new RuntimeException("Failed to initialize GrpcContentClient", e);
+                }
+            }
+          );
+        }
 
 }

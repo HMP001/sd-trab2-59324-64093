@@ -1,5 +1,6 @@
 package client;
 
+
 import api.java.Image;
 import api.java.Result;
 import client.grpc.GrpcImageClient;
@@ -62,11 +63,22 @@ public class ImageClient implements Image {
         return inner.teardown();
     }
 
-    private void materializeChannel () {
+    private void materializeChannel() {
         synchronized (this) {
             if (inner == null)
-                inner = launcher.launch(SERVICE, RestImageClient::new, GrpcImageClient::new);
+                inner = computeInnerChannel();
         }
     }
+
+    private Image computeInnerChannel() {
+        return launcher.launch(SERVICE, RestImageClient::new, uri -> {
+                try {
+                    return new GrpcImageClient(uri);
+                } catch (Exception e) {
+                    throw new RuntimeException("Failed to initialize GrpcContentClient", e);
+                }
+            }
+          );
+        }
 
 }

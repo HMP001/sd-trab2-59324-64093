@@ -7,6 +7,12 @@ import network.DataModelAdaptor;
 import io.grpc.*;
 import io.grpc.internal.PickFirstLoadBalancerProvider;
 import network.grpc.UsersGrpc;
+import network.grpc.UsersProtoBuf.CreateUserArgs;
+import network.grpc.UsersProtoBuf.DeleteUserArgs;
+import network.grpc.UsersProtoBuf.GetUserArgs;
+import network.grpc.UsersProtoBuf.GrpcUser;
+import network.grpc.UsersProtoBuf.SearchUserArgs;
+import network.grpc.UsersProtoBuf.UpdateUserArgs;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -17,7 +23,7 @@ import static api.java.Result.ErrorCode.FORBIDDEN;
 import static api.java.Result.error;
 import static api.java.Result.ok;
 import static client.grpc.GrpcClientUtils.wrapRequest;
-import static network.grpc.UsersProtoBuf.*;
+import io.grpc.netty.NettyChannelBuilder;
 
 public class GrpcUsersClient implements Users {
 
@@ -27,9 +33,10 @@ public class GrpcUsersClient implements Users {
 
     private final UsersGrpc.UsersBlockingStub stub;
 
-    public GrpcUsersClient(URI serverURI) {
-        var channel = ManagedChannelBuilder.forAddress(serverURI.getHost(), serverURI.getPort()).enableRetry().usePlaintext().build();
-        this.stub = UsersGrpc.newBlockingStub(channel);
+    public GrpcUsersClient(URI serverURI) throws Exception {
+        var context = GrpcClientUtils.addSslContext();
+        var channel = NettyChannelBuilder.forAddress(serverURI.getHost(), serverURI.getPort()).sslContext(context).enableRetry().build();		
+		this.stub = UsersGrpc.newBlockingStub(channel);
     }
 
     @Override

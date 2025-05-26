@@ -73,6 +73,13 @@ public class UsersClient implements Users {
     }
 
     private Users computeInnerChannel() {
-        return launcher.launch(SERVICE, RestUsersClient::new, GrpcUsersClient::new);
-    }
+        return launcher.launch(SERVICE, RestUsersClient::new, uri -> {
+                try {
+                    return new GrpcUsersClient(uri);
+                } catch (Exception e) {
+                    throw new RuntimeException("Failed to initialize GrpcUsersClient", e);
+                }
+            }
+          );
+        }
 }
