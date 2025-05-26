@@ -30,8 +30,9 @@ public class GrpcUsersServer {
             var serverURI = GrpcServerUtils.computeServerUri(port);
             announceService(serverURI, period);
             var stub = new GrpcUsersStub();
+            var context = GrpcServerUtils.addSslContext();
             log.info(String.format("Users gRPC Server ready @ %s\n", serverURI));
-            GrpcServerUtils.launchServer(port, stub);
+            GrpcServerUtils.launchServer(context, port, stub);
         } catch (Exception e) {
             log.severe("Unable to launch gRPC server at port %d".formatted(port));
             throw new RuntimeException(e);

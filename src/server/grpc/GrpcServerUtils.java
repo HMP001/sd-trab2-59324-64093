@@ -5,8 +5,16 @@ import io.grpc.*;
 import io.grpc.stub.StreamObserver;
 import server.ServerUtils;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.security.KeyStore;
+import io.grpc.netty.GrpcSslContexts;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
+
+import javax.net.ssl.KeyManagerFactory;
+import io.grpc.netty.NettyServerBuilder;
 
 import static io.grpc.Status.*;
 
@@ -18,9 +26,8 @@ public class GrpcServerUtils {
         return ServerUtils.computeServerUri(COMM_PROTOCOL, port, ServerUtils.CommInterface.GRPC);
     }
 
-    static void launchServer(int port, BindableService stub) throws InterruptedException, IOException {
-        ServerCredentials cred = InsecureServerCredentials.create();
-        Server server = Grpc.newServerBuilderForPort(port, cred).addService(stub).build();
+    static void launchServer(SslContext context, int port, BindableService stub) throws InterruptedException, IOException {
+        Server server = NettyServerBuilder.forPort(port).addService(stub).sslContext(context).build();
         server.start().awaitTermination();
     }
 
@@ -31,6 +38,29 @@ public class GrpcServerUtils {
             r.run();
             obs.onCompleted();
         }
+    }
+
+    static SslContext addSslContext () throws Exception {
+        String keyStoreFilename = System.getProperty("javax.net.ssl.keyStore");
+		String keyStorePassword = System.getProperty("javax.net.ssl.keyStorePassword");
+
+        if (keyStoreFilename == null || keyStorePassword == null) {
+        throw new IllegalStateException("Keystore filename or password not set in system properties.");
+        }
+		
+		KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
+
+		try(FileInputStream input = new FileInputStream(keyStoreFilename)) {
+			keystore.load(input, keyStorePassword.toCharArray());
+		}
+		
+		KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+		
+        keyManagerFactory.init(keystore, keyStorePassword.toCharArray());
+		
+		SslContext context = GrpcSslContexts.configure(SslContextBuilder.forServer(keyManagerFactory)).build();
+
+        return context;
     }
 
     static StatusException errorCodeToStatus(Result.ErrorCode err) {
