@@ -1,48 +1,54 @@
 1 - Criacao Users server Keystores
 
-keytool -ext SAN=dns:Users -genkey -alias Users -keyalg RSA -validity 365 -keystore users-1-server.ks -storetype pkcs12
+keytool -ext SAN=dns:users-1 -genkey -alias Users1 -keyalg RSA -validity 365 -keystore users-1-server.ks -storetype pkcs12
 
 2 - Criacao Image server Keystores
 
-keytool -ext SAN=dns:Image -genkey -alias Image -keyalg RSA -validity 365 -keystore image-1-server.ks -storetype pkcs12
+keytool -ext SAN=dns:image-1 -genkey -alias Image1 -keyalg RSA -validity 365 -keystore image-1-server.ks -storetype pkcs12
 
-keytool -ext SAN=dns:Image -genkey -alias Image -keyalg RSA -validity 365 -keystore image-2-server.ks -storetype pkcs12
+keytool -ext SAN=dns:image-2 -genkey -alias Image2 -keyalg RSA -validity 365 -keystore image-2-server.ks -storetype pkcs12
 
 3 - Criacao Content server Keystores
 
-keytool -ext SAN=dns:Content -genkey -alias Content -keyalg RSA -validity 365 -keystore content-1-server.ks -storetype pkcs12
+keytool -ext SAN=dns:content-1 -genkey -alias Content1 -keyalg RSA -validity 365 -keystore content-1-server.ks -storetype pkcs12
 
-keytool -ext SAN=dns:Content -genkey -alias Content -keyalg RSA -validity 365 -keystore content-2-server.ks -storetype pkcs12
+keytool -ext SAN=dns:content-2 -genkey -alias Content2 -keyalg RSA -validity 365 -keystore content-2-server.ks -storetype pkcs12
 
-keytool -ext SAN=dns:Content -genkey -alias Content -keyalg RSA -validity 365 -keystore content-3-server.ks -storetype pkcs12
+keytool -ext SAN=dns:content-3 -genkey -alias Content3 -keyalg RSA -validity 365 -keystore content-3-server.ks -storetype pkcs12
 
 4 - Client Truststore
 
 cp /usr/lib/jvm/java-19-openjdk-amd64/lib/security/cacerts truststore.ks
 
-keytool -exportcert -alias Users -keystore users-1-server.ks -file users-1.cert
+keytool -exportcert -alias Users1 -keystore users-1-server.ks -file users-1.cert
 
-keytool -importcert -file users-1.cert -alias Users -keystore truststore.ks
+keytool -importcert -file users-1.cert -alias Users1 -keystore truststore.ks
 
-keytool -exportcert -alias Image -keystore image-1-server.ks -file image-1.cert
+keytool -exportcert -alias Image1 -keystore image-1-server.ks -file image-1.cert
 
-keytool -importcert -file image-1.cert -alias Image -keystore truststore.ks
+keytool -importcert -file image-1.cert -alias Image1 -keystore truststore.ks
 
-keytool -exportcert -alias Image -keystore image-2-server.ks -file image-2.cert
+keytool -exportcert -alias Image2 -keystore image-2-server.ks -file image-2.cert
 
 keytool -importcert -file image-2.cert -alias Image2 -keystore truststore.ks
 
-keytool -exportcert -alias Content -keystore content-1-server.ks -file content-1.cert
+keytool -exportcert -alias Content1 -keystore content-1-server.ks -file content-1.cert
 
-keytool -importcert -file content-1.cert -alias Content -keystore truststore.ks
+keytool -importcert -file content-1.cert -alias Content1 -keystore truststore.ks
 
-keytool -exportcert -alias Content -keystore content-2-server.ks -file content-2.cert
+keytool -exportcert -alias Content2 -keystore content-2-server.ks -file content-2.cert
 
 keytool -importcert -file content-2.cert -alias Content2 -keystore truststore.ks
 
-keytool -exportcert -alias Content -keystore content-3-server.ks -file content-3.cert
+keytool -exportcert -alias Content3 -keystore content-3-server.ks -file content-3.cert
 
 keytool -importcert -file content-3.cert -alias Content3 -keystore truststore.ks
 
 
 How to run
+
+1 - mvn clean compile assembly:single
+
+2 - docker build -t sd2425-tp2-api-59324-64093 .
+
+3 - test-sd-tp2.bat -image sd2425-tp2-api-59324-64093
