@@ -9,8 +9,12 @@ import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.CreateTopicsResult;
 import org.apache.kafka.clients.admin.NewTopic;
+import java.util.logging.Logger;
+
 
 public class KafkaUtils {
+
+	private static final Logger log = Logger.getLogger(KafkaUtils.class.getName());
 
 	public static void createTopics(List<String> topics) {
 		for(String topic: topics) {
@@ -32,11 +36,11 @@ public class KafkaUtils {
 			CreateTopicsResult result = client.createTopics(list);
 			
 			result.all().get();
-			System.err.printf("Topic %s was created successfully\n", topic);
+			log.info(String.format("Topic %s was created successfully\n", topic));
 
 
 		} catch (ExecutionException x) {
-			System.err.printf("Topic: %s already exists...\n", topic);
+			log.info(String.format("Topic: %s already exists...\n", topic));
 			x.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -10,8 +10,11 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import java.util.logging.Logger;
 
 public class KafkaSubscriber {
+
+	private static final Logger log = Logger.getLogger(KafkaPublisher.class.getName());
 	static public KafkaSubscriber createSubscriber( String addr, List<String> topics) {
 
 		Properties props = new Properties();
@@ -42,6 +45,7 @@ public class KafkaSubscriber {
 	public KafkaSubscriber(KafkaConsumer<String, String> consumer, List<String> topics) {
 		this.consumer = consumer;
 		this.consumer.subscribe(topics);
+		log.info("Subscribed to topics: " + topics);
 	}
 
 	public void consume(SubscriberListener listener) {

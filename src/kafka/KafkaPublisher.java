@@ -10,9 +10,14 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.serialization.StringSerializer;
 
+import java.util.logging.Logger;
+
 public class KafkaPublisher {
 
+	private static final Logger log = Logger.getLogger(KafkaPublisher.class.getName());
+
 	static public KafkaPublisher createPublisher(String addr) {
+		
 		Properties props = new Properties();
 
 		// List of pairs hostname:port that allows to contact kafka servers
@@ -42,7 +47,7 @@ public class KafkaPublisher {
 		try {
 			Future<RecordMetadata> promise = producer.send(new ProducerRecord<String, String>(topic, key, value));
 			RecordMetadata rec = promise.get();
-			System.out.println("Published to topic " + topic + " with offset " + rec.offset());
+			log.info("Published to topic " + topic + " with offset " + rec.offset());
 			return rec.offset();
 		} catch (ExecutionException | InterruptedException x) {
 			x.printStackTrace();
@@ -55,7 +60,7 @@ public class KafkaPublisher {
 		try {
 			Future<RecordMetadata> promise = producer.send(new ProducerRecord<String, String>(topic, value));
 			RecordMetadata rec = promise.get();
-			System.out.println("Published to topic " + topic + " with offset " + rec.offset());
+			log.info("Published to topic " + topic + " with offset " + rec.offset());
 			return rec.offset();
 		} catch (ExecutionException | InterruptedException x) {
 			x.printStackTrace();
