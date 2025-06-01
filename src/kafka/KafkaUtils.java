@@ -1,4 +1,4 @@
-package lab11.kafka;
+package kafka;
 
 import java.util.ArrayList;
 import java.util.List;
