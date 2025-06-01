@@ -51,4 +51,4 @@ How to run
 
 2 - docker build -t sd2425-tp2-api-59324-64093 .
 
-3 - test-sd-tp2.bat -image sd2425-tp2-api-59324-64093
+3 - ./test-sd-tp2.sh -image sd2425-tp2-api-59324-64093
