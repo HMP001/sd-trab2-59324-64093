@@ -35,7 +35,7 @@ public class RestContentReplicaServer {
             var serverURI = RestServerUtils.computeServerUri(port);
             announceService(period, serverURI);
             RestServerUtils.launchResource(serverURI, ContentResource.class);
-            log.info(String.format("%s Server ready @ %s\n",  ContentClient.SERVICE, serverURI));
+            log.info(String.format("%s Server replica ready @ %s\n",  ContentClient.SERVICE, serverURI));
         } catch( Exception e) {
             log.severe(e.getMessage());
         }
