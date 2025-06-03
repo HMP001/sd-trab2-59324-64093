@@ -161,5 +161,9 @@ public class JavaImage implements Image {
         }
         return ok();
     }
+    
+    public Result<Void> reset() {
+        return ok();
+    }
 
 }
