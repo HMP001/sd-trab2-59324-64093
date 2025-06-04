@@ -13,7 +13,10 @@ public class GrpcImageServer {
 
     public static final int PORT = 9000;
 
+    private static String SHARED_SECRET;
+
     public static void main(String[] args) {
+        SHARED_SECRET = args[0];
         launchServer(PORT);
     }
 

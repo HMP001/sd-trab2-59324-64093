@@ -11,6 +11,8 @@ public class RestImagesServer {
 
     private static final Logger log = Logger.getLogger(RestImagesServer.class.getName());
 
+    private static String SHARED_SECRET;
+
     static {
         System.setProperty("java.net.preferIPv4Stack", "true");
         System.setProperty("java.util.logging.SimpleFormatter.format", "%4$s: %5$s%n");
@@ -19,6 +21,7 @@ public class RestImagesServer {
     public static final int PORT = 8080;
 
     public static void main(String[] args) {
+        SHARED_SECRET = args[0];    
         launchServer(PORT);
     }
 

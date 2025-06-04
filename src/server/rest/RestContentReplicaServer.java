@@ -11,6 +11,8 @@ public class RestContentReplicaServer {
 
     private static final Logger log = Logger.getLogger(RestContentsServer.class.getName());
 
+    private static String SHARED_SECRET;
+
     static {
         System.setProperty("java.net.preferIPv4Stack", "true");
         System.setProperty("java.util.logging.SimpleFormatter.format", "%4$s: %5$s%n");
@@ -19,6 +21,7 @@ public class RestContentReplicaServer {
     public static final int PORT = 8082;
 
     public static void main(String[] args) {
+        SHARED_SECRET = args[0];
         launchServer(PORT);
     }
 
