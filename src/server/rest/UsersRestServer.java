@@ -2,6 +2,7 @@ package server.rest;
 
 import client.UsersClient;
 import network.ServiceAnnouncer;
+import server.SharedSecret;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -19,6 +20,12 @@ public class UsersRestServer {
     public static final int PORT = 8080;
 
     public static void main(String[] args) {
+        if (args.length == 0) {
+            log.severe("Missing shared secret");
+            System.exit(1);
+        }
+        SharedSecret.setSharedSecret(args[0]);
+        log.info("Using User Rest Server secret: " + args[0]); 
         launchServer(PORT);
     }
 

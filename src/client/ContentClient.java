@@ -123,8 +123,10 @@ public class ContentClient implements Content {
     
     @Override
     public Result<Boolean> checkImage(String iid) {
-        if (inner == null)
+        if (inner == null){
+            server.SharedSecret.setSharedSecret("secret");
             materializeChannel();
+        }
         return inner.checkImage(iid);
     }
 

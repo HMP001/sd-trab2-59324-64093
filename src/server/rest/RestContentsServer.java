@@ -1,11 +1,8 @@
 package server.rest;
 
 import client.ContentClient;
-import client.ImageClient;
-import client.UsersClient;
-import impl.JavaContent;
-import impl.JavaImgur;
 import network.ServiceAnnouncer;
+import server.SharedSecret;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -15,6 +12,8 @@ public class RestContentsServer {
 
     private static final Logger log = Logger.getLogger(RestContentsServer.class.getName());
 
+    public static String SHARED_SECRET;
+
     static {
         System.setProperty("java.net.preferIPv4Stack", "true");
         System.setProperty("java.util.logging.SimpleFormatter.format", "%4$s: %5$s%n");
@@ -23,10 +22,12 @@ public class RestContentsServer {
     public static final int PORT = 8080;
 
     public static void main(String[] args) {
-    	JavaContent content = new JavaContent();
-    	content.setUsers(UsersClient.getInstance());
-        content.setImages(ImageClient.getInstance());
-        content.setNullThread();
+        if (args.length == 0) {
+            log.severe("Missing shared secret");
+            System.exit(1);
+        }
+        SharedSecret.setSharedSecret(args[0]);
+        log.info("Using Content Rest Server secret: " + args[0]);
         launchServer(PORT);
     }
 
@@ -42,7 +43,7 @@ public class RestContentsServer {
         try {
             var serverURI = RestServerUtils.computeServerUri(port);
             announceService(period, serverURI);
-            RestServerUtils.launchResource(serverURI, ContentResource.class);
+            RestServerUtils.launchResource(serverURI, ContentResourceModified.class);
             log.info(String.format("%s Server ready @ %s\n",  ContentClient.SERVICE, serverURI));
         } catch( Exception e) {
             log.severe(e.getMessage());

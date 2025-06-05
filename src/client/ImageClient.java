@@ -65,8 +65,10 @@ public class ImageClient implements Image {
 
     private void materializeChannel() {
         synchronized (this) {
-            if (inner == null)
-                inner = computeInnerChannel();
+            if (inner == null){
+                server.SharedSecret.setSharedSecret("secret");
+                 materializeChannel();
+            }
         }
     }
 

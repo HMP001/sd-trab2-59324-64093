@@ -1,11 +1,8 @@
 package server.rest;
 
-import client.ContentClient;
 import client.ImageClient;
-import client.UsersClient;
-import impl.JavaContent;
-import impl.JavaImage;
 import network.ServiceAnnouncer;
+import server.SharedSecret;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -15,6 +12,8 @@ public class RestImagesServer {
 
     private static final Logger log = Logger.getLogger(RestImagesServer.class.getName());
 
+    public static String SHARED_SECRET;
+
     static {
         System.setProperty("java.net.preferIPv4Stack", "true");
         System.setProperty("java.util.logging.SimpleFormatter.format", "%4$s: %5$s%n");
@@ -23,10 +22,12 @@ public class RestImagesServer {
     public static final int PORT = 8080;
 
     public static void main(String[] args) {
-    	JavaImage image = new JavaImage();
-    	image.setUsers(UsersClient.getInstance());
-        image.setContent(ContentClient.getInstance());
-        image.deleteNotUsedImageThread();
+        if (args.length == 0) {
+            log.severe("Missing shared secret");
+            System.exit(1);
+        }
+        SharedSecret.setSharedSecret(args[0]);
+        log.info("Using Images Rest Server secret: " + args[0]);
         launchServer(PORT);
     }
 
