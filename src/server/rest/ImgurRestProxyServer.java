@@ -22,10 +22,11 @@ public class ImgurRestProxyServer {
 
     public static void main(String[] args) {
     	boolean reset = args.length > 0 && Boolean.parseBoolean(args[0]);
-
+    	JavaImgur imgur = new JavaImgur();
+    	imgur.createAlbum();
+    		
         if (reset) {
             System.out.println("Reset do servidor");
-            JavaImgur imgur = new JavaImgur();
             imgur.setUsers(UsersClient.getInstance());
             imgur.teardown();
         }

@@ -109,6 +109,17 @@ public class JavaImgur implements Image {
 		}
 		return ok(null);
 	}
+	
+	public void createAlbum() {
+		String proxyName = getProxyName();
+		SearchAlbum album = new SearchAlbum();
+		String albumId = album.execute(proxyName);
+		
+		if(albumId == null) {
+			CreateAlbum create = new CreateAlbum();
+			create.execute(proxyName);
+		}
+	}
 
 	private String getProxyName() {
 		String ks = System.getProperty("javax.net.ssl.keyStore");

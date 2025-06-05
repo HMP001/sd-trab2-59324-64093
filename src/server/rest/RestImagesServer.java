@@ -1,6 +1,10 @@
 package server.rest;
 
+import client.ContentClient;
 import client.ImageClient;
+import client.UsersClient;
+import impl.JavaContent;
+import impl.JavaImage;
 import network.ServiceAnnouncer;
 
 import java.io.IOException;
@@ -19,6 +23,10 @@ public class RestImagesServer {
     public static final int PORT = 8080;
 
     public static void main(String[] args) {
+    	JavaImage image = new JavaImage();
+    	image.setUsers(UsersClient.getInstance());
+        image.setContent(ContentClient.getInstance());
+        image.deleteNotUsedImageThread();
         launchServer(PORT);
     }
 

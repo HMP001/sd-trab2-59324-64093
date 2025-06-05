@@ -30,6 +30,8 @@ service Content {
 	rpc getDownVotes ( GetPostArgs ) returns ( VoteCountResult ) {}
 
 	rpc forgetUser (ForgetUserArgs) returns (ForgetUserResult) {}
+	
+	rpc checkImage (CheckImageArgs) returns (CheckImageResult);
 
 }
 
@@ -100,3 +102,11 @@ message ForgetUserArgs {
 }
 
 message ForgetUserResult {}
+
+message CheckImageArgs {
+	string imageId = 1;
+}
+
+message CheckImageResult {
+	bool found = 1; 
+}

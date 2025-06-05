@@ -174,5 +174,7 @@ public interface Content {
     Result<Integer> getDownVotes(String postId);
 
 	Result<Void> forgetUser(String userId);
+	
+	Result<Boolean> checkImage(String iid);
 
 }

@@ -112,4 +112,9 @@ public class ContentResource implements RestContent {
     public void forgetUser(String uid) {
         wrapResult(contents.forgetUser(uid));
     }
+    
+    @Override
+    public Boolean checkImage(String iid) {
+        return wrapResult(contents.checkImage(iid));
+    }
 }

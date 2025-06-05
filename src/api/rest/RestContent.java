@@ -27,6 +27,7 @@ public interface RestContent {
 	String USERID = "userId";
 	String SORTBY = "sortBy";
 	String TIMEOUT = "timeout";
+	String ALL_POSTS = "all_posts";
 
 	String FORGET = "forget";
 	
@@ -222,7 +223,7 @@ public interface RestContent {
 	 * 			NOT_FOUND if the postId does not match an existing post
 	 */
 	@GET
-	@Path("{" + POSTID + "}/" + DOWNVOTE)
+	@Path("{" + ALL_POSTS + "}/" + DOWNVOTE)
     Integer getDownVotes(@PathParam(POSTID) String postId);
 
 	/**
@@ -233,5 +234,9 @@ public interface RestContent {
 	@DELETE
 	@Path(FORGET + "/{" + USERID + "}")
 	void forgetUser(@PathParam(USERID) String uid);
+	
+	@GET
+	@Path("/checkImage/{imageId}")
+	Boolean checkImage(@PathParam("imageId") String imageId);
 
 }

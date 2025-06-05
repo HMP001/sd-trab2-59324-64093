@@ -34,42 +34,43 @@ public class GetImagesFromAlbum extends ImgurClient {
 	}
 	
 	public List<String> execute(String albumId) {
-		String requestURL = GET_IMAGES_FROM_ALBUM_URL.replaceAll("\\{\\{albumHash\\}\\}", albumId);
-		
-		 OAuthRequest request = new OAuthRequest(Verb.GET, requestURL);
-	     service.signRequest(accessToken, request);
-		
-	     try {
-	            Response r = service.execute(request);
-	            if (r.getCode() != HTTP_SUCCESS) {
-	                System.err.println("Failed to fetch images\nStatus: " + r.getCode() + "\nBody: " + r.getBody());
-	                return null;
-	            } else {
-	                JsonObject responseJson = JsonParser.parseString(r.getBody()).getAsJsonObject();
-	                JsonArray images = responseJson.getAsJsonArray("data");
+	    String requestURL = GET_IMAGES_FROM_ALBUM_URL.replaceAll("\\{\\{albumHash\\}\\}", albumId);
 
-	                List<String> imageIds = new ArrayList<>();
-	                for (JsonElement element : images) {
-	                    JsonObject imgObj = element.getAsJsonObject();
-	                    imageIds.add(imgObj.get("id").getAsString());
-	                }
+	    OAuthRequest request = new OAuthRequest(Verb.GET, requestURL);
+	    service.signRequest(accessToken, request);
 
-	                return imageIds;
+	    try {
+	        Response r = service.execute(request);
+	        if (r.getCode() != HTTP_SUCCESS) {
+	            System.err.println("Failed to fetch images\nStatus: " + r.getCode() + "\nBody: " + r.getBody());
+	            return null;
+	        } else {
+	            JsonObject responseJson = JsonParser.parseString(r.getBody()).getAsJsonObject();
+
+	            if (!responseJson.has("data") || responseJson.get("data").isJsonNull()) {
+	                System.out.println("No images found in album.");
+	                return new ArrayList<>();
 	            }
-			
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-			System.exit(1);
-		} catch (ExecutionException e) {
-			e.printStackTrace();
-			System.exit(1);
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
-		
-		return null;
+
+	            JsonArray images = responseJson.getAsJsonArray("data");
+	            List<String> imageIds = new ArrayList<>();
+
+	            for (JsonElement element : images) {
+	                JsonObject imgObj = element.getAsJsonObject();
+	                imageIds.add(imgObj.get("id").getAsString());
+	            }
+
+	            return imageIds;
+	        }
+
+	    } catch (InterruptedException | ExecutionException | IOException e) {
+	        e.printStackTrace();
+	        System.exit(1);
+	    }
+
+	    return null;
 	}
+
 	
 	public static void main(String[] args) throws Exception {
 	

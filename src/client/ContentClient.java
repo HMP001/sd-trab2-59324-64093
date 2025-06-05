@@ -120,6 +120,13 @@ public class ContentClient implements Content {
             materializeChannel();
         return inner.forgetUser(uid);
     }
+    
+    @Override
+    public Result<Boolean> checkImage(String iid) {
+        if (inner == null)
+            materializeChannel();
+        return inner.checkImage(iid);
+    }
 
     private void materializeChannel() {
         synchronized (this) {

@@ -152,5 +152,12 @@ public class RestContentClient implements Content {
         var target = baseTarget.path(RestContent.FORGET).path(uid);
         return deleteNoContentRequest(target);
     }
+    
+    @Override
+    public Result<Boolean> checkImage(String iid) {
+        log.fine("check image " + iid);
+        var target = baseTarget.path("checkImage").path(iid);
+        return genericGetRequest(target, Boolean.class);
+    }
 
 }

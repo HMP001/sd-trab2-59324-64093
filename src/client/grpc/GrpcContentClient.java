@@ -215,4 +215,11 @@ public class GrpcContentClient implements Content {
             return ok();
         });
     }
+    
+    @Override
+    public Result<Boolean> checkImage(String iid) {
+        
+            return ok();
+        
+    }
 }

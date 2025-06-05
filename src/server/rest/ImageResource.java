@@ -2,6 +2,7 @@ package server.rest;
 
 import api.rest.RestImage;
 import impl.JavaImage;
+import client.ContentClient;
 import client.UsersClient;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.UriBuilder;
@@ -19,6 +20,7 @@ public class ImageResource implements RestImage {
 
     public ImageResource() {
         images.setUsers(UsersClient.getInstance());
+        images.setContent(ContentClient.getInstance());
     }
 
     @Override
