@@ -29,6 +29,7 @@ public class RestServerUtils {
     static <T> void launchResource(String uri, Class<T> resourceClass) {
         ResourceConfig config = new ResourceConfig();
         config.register(resourceClass);
+        config.register(server.SecretAuth.class); 
 
         try{
 

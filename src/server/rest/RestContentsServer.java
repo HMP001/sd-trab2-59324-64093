@@ -2,6 +2,7 @@ package server.rest;
 
 import client.ContentClient;
 import network.ServiceAnnouncer;
+import server.SharedSecret;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -11,7 +12,7 @@ public class RestContentsServer {
 
     private static final Logger log = Logger.getLogger(RestContentsServer.class.getName());
 
-    private static String SHARED_SECRET;
+    public static String SHARED_SECRET;
 
     static {
         System.setProperty("java.net.preferIPv4Stack", "true");
@@ -21,7 +22,12 @@ public class RestContentsServer {
     public static final int PORT = 8080;
 
     public static void main(String[] args) {
-        SHARED_SECRET = args[0];
+        if (args.length == 0) {
+            log.severe("Missing shared secret");
+            System.exit(1);
+        }
+        SharedSecret.setSharedSecret(args[0]);
+        log.info("Using Content Rest Server secret: " + args[0]);
         launchServer(PORT);
     }
 

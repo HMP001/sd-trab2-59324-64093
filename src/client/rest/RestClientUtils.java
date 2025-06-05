@@ -7,15 +7,17 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.Response;
+import server.SharedSecret;
+
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 
-import static api.java.Result.ErrorCode.INTERNAL_ERROR;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static api.java.Result.ErrorCode.*;
+
 
 public class RestClientUtils {
 
@@ -54,6 +56,10 @@ public class RestClientUtils {
     static <T> Result<T> genericGetRequest(WebTarget target, Class<T> outputClass) {
         return runRepeatableRequest(() -> {
             var invocation = target.request().accept(APPLICATION_JSON);
+            String secret = SharedSecret.getSharedSecret();
+                if (secret != null)
+                invocation.header("X-Server-Secret", secret);
+                log.info("Using secret: " + secret + " " + outputClass.getName()); 
             try (var response = invocation.get()) {
                 return processResponseWithBody(outputClass, response);
             }
@@ -63,6 +69,10 @@ public class RestClientUtils {
     static <T> Result<T> genericDeleteRequest(WebTarget target, Class<T> outputClass) {
         return runRepeatableRequest(() -> {
             var invocation = target.request().accept(APPLICATION_JSON);
+            String secret = SharedSecret.getSharedSecret();
+                if (secret != null)
+                invocation.header("X-Server-Secret", secret);
+                log.info("Using secret: " + secret + " " + outputClass.getName());
             try (var response = invocation.delete()) {
                 return processResponseWithBody(outputClass, response);
             }
@@ -84,6 +94,10 @@ public class RestClientUtils {
     static <T,G> Result<G> genericPostRequest(WebTarget target, T entity, Class<G> outputClass) {
         return runRepeatableRequest(() -> {
             var invocation = target.request().accept(APPLICATION_JSON);
+            String secret = SharedSecret.getSharedSecret();
+                if (secret != null)
+                invocation.header("X-Server-Secret", secret);
+                log.info("Using secret: " + secret + " " + outputClass.getName());
             var body = Entity.json(entity);
             try (var response = invocation.post(body)) {
                 return processResponseWithBody(outputClass, response);
@@ -94,6 +108,10 @@ public class RestClientUtils {
     static <T,G> Result<G> genericPutRequest(WebTarget target, T entity, Class<G> outputClass) {
         return runRepeatableRequest(() -> {
             var invocation = target.request().accept(APPLICATION_JSON);
+            String secret = SharedSecret.getSharedSecret();
+                if (secret != null)
+                invocation.header("X-Server-Secret", secret);
+                log.info("Using secret: " + secret + " " + outputClass.getName());
             var body = Entity.json(entity);
             try (var response = invocation.put(body)) {
                 return processResponseWithBody(outputClass, response);

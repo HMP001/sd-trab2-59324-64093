@@ -123,8 +123,10 @@ public class ContentClient implements Content {
 
     private void materializeChannel() {
         synchronized (this) {
-            if (inner == null)
+            if (inner == null){
+                server.SharedSecret.setSharedSecret("secret");
                 inner = computeInnerChannel();
+            }
         }
     }
 
